@@ -4,4 +4,4 @@
 # If you change this key, all old signed cookies will become invalid!
 # Make sure the secret is at least 30 characters and all random,
 # no regular words or you'll be exposed to dictionary attacks.
-OpenidTest::Application.config.secret_token = '9841257493e3f63d2d86d3ce0558ef123942e92f938829eed3f2a1323bdcd0b2cac77eddd052001e9f0085e74ea3419d5204d385a1c396cca0090c6bf61e9cce'
+OpenidTest::Application.config.secret_token = 'b4cc3f106808e17f901184f184e9baf547114ea2bafb8fb8280034341bcddbec1f78d1cd5578a040cbe03a8f694f866cab5e5fc354e9aa2a4bdca85e577402b0'

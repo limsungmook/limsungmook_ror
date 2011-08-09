@@ -7,7 +7,7 @@ class RelaysController < ApplicationController
 
   def destroy
     @talk = Talk.find(params[:talk_id])
-    @relay = @talk.relay.find(params[:id])
+    @relay = @talk.relays.find(params[:id])
     @relay.destroy
     redirect_to talk_path(@talk)
   end

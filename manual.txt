@@ -1,0 +1,111 @@
+레일즈 프로젝트를 시작할 때는 다음을 입력한다.
+rails new ProjectName
+만약 mysql 을 처음부터 지원하고 싶으면 다음과 같이 입력한다.
+rails new ProjectName -d mysql
+
+#db 설정
+sqlite3
+ config/database.yml 파일을 수정한다. 아직까진 수정할 것 없었음.
+mysql
+ config/database.yml 을 다음과 같이 수정한다.
+development:
+	adapter: mysql2
+	encoding: utf8
+	database: ProjectName_development
+	pool: 5
+	username: root
+	password: <secret>
+	socket: /tmp/mysql.sock
+
+#트리 구조(직접 사용하는)
+Gemfile - 의존성을 기재한다. 새로운 모듈을 사용할 시 이곳에 추가해준다.
+app - MVC 모델을 포함하는 폴더
+config/ - 실행 시간의 규칙, 라우팅, 데이터베이스 등 설정을 저장.
+db/ - 데이터베이스 마이그레이션(스키마) 파일이 위치
+public/ - 외부에서 볼 수 있는 '유일한' 폴더. 정적 파일들(자바스크립트, 스타일시트 외)이 위치
+
+#의존성 설치
+bundle install - Gemfile 에 기술된 젬 외의 다른 젬은 설치하지 않는다.
+
+#빈 데이터베이스 설정
+rake db:create  - db/ 폴더에 데이터베이스가 만들어진다.
+
+#서버 실행
+rails server - webrick 이 실행된다. 나중에 apache, mongrel(이거로 할 듯) 등을 추가할 것 
+
+#web root 주소 설정
+rm public/index.html
+emacs config/routes.rb
+#root :to => "welcome#index" 를 아래와 같이 변경
+root :to => "home#index"    - root 액션을 home 컨트롤러의 index  액션과 연결하라. 
+
+#talk의 쓰레드 창시자? 생성
+rails g scaffold talk user:string content:text
+ 위의 명령은 많은 것에 대한 발판(scaffold)를 만들어준다. 그 중 우선 db에 대해서만 살펴보면
+db/migrate/20142034023_create_talks.rb 가 생성되고, 그 내용은 다음과 같다.
+
+
+class CreateTalks < ActiveRecord::Migration
+  def self.up
+    create_table :talks do |t|
+      t.string :user
+      t.text :content
+
+      t.timestamps
+    end
+  end
+
+  def self.down
+    drop_table :talks
+  end
+end
+
+여기서 ror이 매력적인 것은 반드시 설정되어야 하는 key인 id가 저절로 들어간다는 점, 그리고 created_at 과 updated_at도 추가된다. 
+한마디로 번거롭게 반드시 지켜야 할 '규칙'을 집어넣는 것이 아니라 convension 으로 편하게 대체된다.
+
+
+#생성된 마이그레이션을 실행하기
+rake db:migrate - 약방의 감초랄까.
+지금은 개발환경이기 때문에 development 환경에만 적용된다. 실제 제품에 적용하기 위해서는 다음과 같이 한다.
+rake db:migrate RAILS_ENV=something
+
+#이제까지 잘 되었나 확인해보기
+http://localhost:3000/talks 에 들어가면 원하는 장면이 나온다. 
+
+#DB 데이터 검증(validation)
+app/models/talk.rb
+원래의 데이터는 다음과 같다. 
+class Talk < ActiveRecord::Base
+end
+
+이것을 다음과 같이 바꿔준다
+class Talk < ActiveRecord::Base
+      validates :user, :presence => true
+      validates :content, :presence => true, :length => { :minimum => 5 }
+end
+
+#talk 리스트의 위치는 app/view/talks/index.html.erb 이다. 여기를 수정해 원하는 UI를 만들어준다.
+
+<h1>Listing talks</h1>
+
+<table>
+  <tr>
+    <th>토크</th>
+    <th>토크자</th>
+  </tr>
+
+<% @talks.each do |talk| %>
+  <tr>
+    <td><%= link_to talk.content, talk %></td> 
+    <td><%= talk.user %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Talk', new_talk_path %>
+
+
+#전체적인 레이아웃은 app/views/layouts/application.html.erb 파일에서 수정해준다.
+

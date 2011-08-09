@@ -1,0 +1,7 @@
+gem install devise
+emacs GemFile
+ gem 'devise'
+bundle install
+rails g devise:install
+rails g devise User  # Admin, 등등 좋을대로. 
+rake db:migrate
