@@ -1,0 +1,20 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>User:</b>
+  <%= @talk.user %>
+</p>
+
+<p>
+  <b>Content:</b>
+  <%= @talk.content %>
+</p>
+
+<!-- <% @talk.relays.each do |relay| %> -->
+<!-- <% end  %> -->
+<%= render @talk.relays %>
+
+
+<%= render "relays/form" %>
+<%= link_to 'Edit Talk', edit_talk_path(@talk) %> |
+<%= link_to 'Back to Talks', talks_path %>

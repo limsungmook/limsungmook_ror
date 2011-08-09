@@ -1,0 +1,4 @@
+레일즈 프로젝트를 시작할 때는 다음을 입력한다.
+rails new ProjectName
+만약 mysql 을 처음부터 지원하고 싶으면 다음과 같이 입력한다.
+rails new ProjectName -d mysql
