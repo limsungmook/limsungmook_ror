@@ -1,0 +1,1 @@
+application.html.erb의 L18에 destroy_user_session_path, :method => :delete 로 수정한다
